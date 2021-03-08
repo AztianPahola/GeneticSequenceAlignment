@@ -43,11 +43,12 @@ public class GeneticSequenceAligner {
 
 			// Iterates through the upper left corner of the fridge matrix
 			for (int i = 0; i < m; i++) {
-				for (int j = 0; j < diagonal; j++) {
-					optimalMatrix[n - vOffset + j][m - hOffset - j] = 0;// Insert the juice here;
-				}
-				hOffset++;
 				diagonal--;
+				hOffset++;
+				for (int j = 0; j < diagonal; j++) {
+					optimalMatrix[j][m - hOffset - j] = 0;// Insert the juice here;
+				}
+				
 			}
 			
 		} else if (m > n) { // Matrix is a rectangle
@@ -76,13 +77,42 @@ public class GeneticSequenceAligner {
 
 			// Iterates through the upper left corner of the rectangular matrix
 			for (int i = 0; i < n; i++) {
+				diagonal--;
 				for (int j = 0; j < diagonal; j++) {
 					optimalMatrix[n - vOffset + j][m - hOffset - j] = 0;// Insert the juice here;
 				}
 				hOffset++;
-				diagonal--;
 			}
-		} else {
+		} else { // The matrix is a square
+			
+			int diagonal = 1; // Length of the current diagonal
+			int vOffset = 0; // Vertical offset to determine starting point for diagonal iteration
+			int hOffset = 0; // Horizontal offset to determine starting point for diagonal iteration
+			int d = 1;
+			
+			// Iterates through the bottom right corner of the square matrix
+			for (int i = 0; i < n; i++) {
+				for (int j = 0; j < diagonal; j++) {
+					optimalMatrix[n - vOffset + j][m - hOffset - j] = 0;// Insert the juice here;
+				}
+				vOffset++;
+				diagonal++;
+			}
+
+			// Iterates through the middle diagonal of the square matrix
+			for (int j = 0; j < diagonal; j++) {
+				optimalMatrix[n - vOffset + j][m - hOffset - j] = 0;// Insert the juice here;
+			}
+			
+			// Iterates through the upper left corner of the square matrix
+			for (int i = 0; i < m; i++) {
+				diagonal--;
+				hOffset++;
+				for (int j = 0; j < diagonal; j++) {
+					optimalMatrix[n - vOffset + j][m - hOffset - j] = 0;// Insert the juice here;
+				}
+
+			}
 			
 		}
 

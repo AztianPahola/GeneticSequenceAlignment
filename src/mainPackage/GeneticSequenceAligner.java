@@ -17,7 +17,39 @@ public class GeneticSequenceAligner {
 	private static char[][] getOptimalSequences(char[] geneX, int n, char[] geneY, int m) {
 		int[][] optimalMatrix = new int[n + 1][m + 1];
 
-		if (n > m) {
+		if (n > m) { // Matrix is fridge shaped (standing rectangle)
+			
+			int diagonal = 1; // Length of the current diagonal
+			int vOffset = 0; // Vertical offset to determine starting point for diagonal iteration
+			int hOffset = 0; // Horizontal offset to determine starting point for diagonal iteration
+			int d = 1;
+			
+			// Iterates through the bottom right corner of the fridge matrix
+			for (int i = 0; i < m; i++) {
+				for (int j = 0; j < diagonal; j++) {
+					optimalMatrix[n - vOffset + j][m - hOffset - j] = 0;// Insert the juice here;
+				}
+				vOffset++;
+				diagonal++;
+			}
+
+			// Iterates through the middle section of the fridge matrix
+			for (int i = 0; i < n + 1 - m; i++) {
+				for (int j = 0; j < diagonal; j++) {
+					optimalMatrix[n - vOffset + j][m - hOffset - j] = 0;// Insert the juice here;
+				}
+				vOffset++;
+			}
+
+			// Iterates through the upper left corner of the fridge matrix
+			for (int i = 0; i < m; i++) {
+				for (int j = 0; j < diagonal; j++) {
+					optimalMatrix[n - vOffset + j][m - hOffset - j] = 0;// Insert the juice here;
+				}
+				hOffset++;
+				diagonal--;
+			}
+			
 		} else if (m > n) { // Matrix is a rectangle
 			
 			int diagonal = 1; // Length of the current diagonal
@@ -50,6 +82,8 @@ public class GeneticSequenceAligner {
 				hOffset++;
 				diagonal--;
 			}
+		} else {
+			
 		}
 
 	}

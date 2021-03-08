@@ -28,7 +28,7 @@ public class GeneticSequenceAligner {
 			// Iterates through the bottom right corner of the rectangular matrix
 			for (int i = 0; i < n; i++) {
 				for (int j = 0; j < diagonal; j++) {
-					optimalMatrix[n - vOffset + j][m - j] = 0;// Insert the juice here;
+					optimalMatrix[n - vOffset + j][m - hOffset - j] = 0;// Insert the juice here;
 				}
 				vOffset++;
 				diagonal++;
@@ -45,7 +45,7 @@ public class GeneticSequenceAligner {
 			// Iterates through the upper left corner of the rectangular matrix
 			for (int i = 0; i < n; i++) {
 				for (int j = 0; j < diagonal; j++) {
-					optimalMatrix[n - vOffset + j][m - j] = 0;// Insert the juice here;
+					optimalMatrix[n - vOffset + j][m - hOffset - j] = 0;// Insert the juice here;
 				}
 				hOffset++;
 				diagonal--;

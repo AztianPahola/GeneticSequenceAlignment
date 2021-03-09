@@ -22,7 +22,7 @@ public class GeneticSequenceAligner {
 		
 		Cost[][] testResult = generateCostMatrix(myTestGeneX,10,myTestGeneY,8);
 		
-		String[] optimalCosts = determineOptimalCosts(testResult,myTestGeneX,myTestGeneY);
+		String[] optimalAlignement = getOptimalAlignment(testResult,myTestGeneX,myTestGeneY);
 		
 		for (Cost[] is : testResult) {
 			for (Cost is2 : is) {
@@ -159,12 +159,50 @@ public class GeneticSequenceAligner {
 			
 			else 
 				optimalCost = new Cost(putGapInYCost, new int[] {xIndex+1,yIndex});
-			
-			
 		}
-		
 		return optimalCost; 
-		
 	}
 
+	
+	private static String[] getOptimalAlignment(Cost[][] costMatrix, char[] geneX, char[] geneY) {
+		int x  = 0;
+		int y = 0;
+		int[] nextIndex;
+		String[] genes = new String[] {"",""};
+		
+		nextIndex =  costMatrix[x][y].getPointer();
+		
+		while(x < costMatrix.length || y < costMatrix[0].length){
+			
+			if(nextIndex[0] == x+1 && nextIndex[1] == y+1) { // The previous index is diagonal
+				
+				genes[0] += geneX[x];
+				genes[1] += geneY[y];
+				x++;
+				y++;
+				nextIndex = costMatrix[x][y].getPointer();
+				
+			}else if(nextIndex[0] == x && nextIndex[1] == y+1) { // The previous index is to the right
+				
+				genes[0] += "-";
+				genes[1] += geneY[y];
+				y++;
+				nextIndex = costMatrix[x][y].getPointer();
+				
+			}else if(nextIndex[0] == x+1 && nextIndex[1] == y) { // The previous index is below
+				
+				genes[0] += geneX[x];
+				genes[1] += "-";
+				x++;
+				nextIndex = costMatrix[x][y].getPointer();
+				
+			}else { // Theoretically this should never be the case
+				
+				System.out.println("There was an error in getting the optimal Alignment");
+				
+			}
+		}
+		
+		return genes;
+	}
 }

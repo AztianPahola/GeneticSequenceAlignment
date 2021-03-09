@@ -22,7 +22,7 @@ public class GeneticSequenceAligner {
 		
 		Cost[][] testResult = generateCostMatrix(myTestGeneX,10,myTestGeneY,8);
 		
-		String[] optimalAlignement = getOptimalAlignment(testResult,myTestGeneX,myTestGeneY);
+		String[] optimalAlignment = getOptimalAlignment(testResult,myTestGeneX,myTestGeneY);
 		
 		for (Cost[] is : testResult) {
 			for (Cost is2 : is) {
@@ -30,6 +30,9 @@ public class GeneticSequenceAligner {
 			}
 			System.out.println();
 		}
+		System.out.println();
+		System.out.println(optimalAlignment[0]);
+		System.out.println(optimalAlignment[1]);
 		
 	}
 
@@ -172,7 +175,7 @@ public class GeneticSequenceAligner {
 		
 		nextIndex =  costMatrix[x][y].getPointer();
 		
-		while(x < costMatrix.length || y < costMatrix[0].length){
+		while(x < costMatrix.length-1 || y < costMatrix[0].length-1){
 			
 			if(nextIndex[0] == x+1 && nextIndex[1] == y+1) { // The previous index is diagonal
 				

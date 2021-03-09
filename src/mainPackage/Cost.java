@@ -1,5 +1,7 @@
 package mainPackage;
 
+// Holds the value of the cost as well as a pointer to the Cost that this came from, 
+// or {0,0} is there was no previous Cost.
 public class Cost {
 
 	public int value;

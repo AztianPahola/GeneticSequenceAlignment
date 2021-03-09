@@ -2,40 +2,64 @@ package mainPackage;
 
 public class GeneticSequenceAligner {
 
+	// These variable determine the penalties for a mismatch of genes and a gap;
+	// adjusting these variables may change the optimal alignment of the genes
 	private static final int MISMATCH_PENALTY = 1;
 	private static final int GAP_PENALTY= 2;
 	
 
 	
 	public static void main(String[] args) {
-		
+	
 		char[] testGene1x = { 'C', 'A', 'G', 'C', 'A', 'C', 'T', 'T', 'G', 'G', 'A', 'T', 'T', 'C', 'T', 'C', 'G','G' };
 		char[] testGene1y = { 'C', 'A', 'G', 'C', 'G', 'T', 'G', 'G' };
 		
+		testClass(testGene1x,testGene1y);
+		
 		char[] testGene2x = { 'T', 'C', 'C', 'C', 'A', 'G', 'T', 'T', 'A', 'T', 'G', 'T', 'C', 'A', 'G', 'G', 'G', 'G',
 								'A', 'C', 'A', 'C', 'G', 'A', 'G', 'C', 'A', 'T', 'G', 'C', 'A', 'G', 'A', 'G', 'A', 'C' };
-		char[] testGene2Y = { 'A', 'A', 'T', 'T', 'G', 'C', 'C', 'G', 'C', 'C', 'G', 'T', 'C', 'G', 'T', 'T', 'T', 'T',
+		char[] testGene2y = { 'A', 'A', 'T', 'T', 'G', 'C', 'C', 'G', 'C', 'C', 'G', 'T', 'C', 'G', 'T', 'T', 'T', 'T',
 								'C', 'A', 'G', 'C', 'A', 'G', 'T', 'T', 'A', 'T', 'G', 'T', 'C', 'A', 'G', 'A', 'T', 'C' };
+
+		testClass(testGene2x,testGene2y);
 		
+		// Test genes from the textbook
 		char[] myTestGeneX = {'A','A','C','A','G','T','T','A','C','C'};
 		char[] myTestGeneY = {'T','A','A','G','G','T','C','A'};
 		
-		Cost[][] testResult = generateCostMatrix(myTestGeneX,10,myTestGeneY,8);
+		testClass(myTestGeneX,myTestGeneY);
 		
-		String[] optimalAlignment = getOptimalAlignment(testResult,myTestGeneX,myTestGeneY);
 		
-		for (Cost[] is : testResult) {
+	}
+	
+	// Tests the class, given two genes, Printing the output
+	private static void testClass(char[] geneX, char[] geneY) {
+		System.out.println("/////////////////////////////////////////////////////////////");
+		Cost[][] costMatrix;
+		String[] optimalAlignment;
+		
+		costMatrix = generateCostMatrix(geneX,geneX.length,geneY,geneY.length);
+		
+		optimalAlignment = getOptimalAlignment(costMatrix,geneX,geneY);
+		
+		// Print out the cost matrix
+		for (Cost[] is : costMatrix) {
 			for (Cost is2 : is) {
 				System.out.printf("%4d",is2.value);
 			}
 			System.out.println();
 		}
+		
 		System.out.println();
+		// Print out the gene alignments
 		System.out.println(optimalAlignment[0]);
 		System.out.println(optimalAlignment[1]);
-		
+		System.out.println("/////////////////////////////////////////////////////////////");
 	}
 
+	/* Iterates diagonally through the matrix, starting at the bottom right corner, generating the optimal cost based on 
+	   the values to an index's right, diagonal and below. iteration method changes based on the shape of 
+	   the matrix. */
 	private static Cost[][] generateCostMatrix(char[] geneX, int n, char[] geneY, int m) {
 		
 		Cost[][] costMatrix = new Cost[n + 1][m + 1];
@@ -140,6 +164,8 @@ public class GeneticSequenceAligner {
 
 	}
 	
+	// Determines the optimalCost of a given index based on the value to it's right, below it and diagonal to it,
+	// and the cost of the penalties according to the class constants.
 	private static Cost getOptimalCost(int xIndex,char[] geneX, int yIndex,char[] geneY, Cost[][] matrix) {
 		Cost optimalCost = new Cost();
 		
@@ -154,19 +180,19 @@ public class GeneticSequenceAligner {
 			if(geneX[xIndex] != geneY[yIndex])
 				alignGenesCost += MISMATCH_PENALTY;
 			
-			if(alignGenesCost < putGapInXCost && alignGenesCost < putGapInYCost) 
+			if(alignGenesCost < putGapInXCost && alignGenesCost < putGapInYCost) // We go diagonal
 				optimalCost = new Cost(alignGenesCost, new int[] {xIndex+1,yIndex+1});
 			
-			else if(putGapInXCost < alignGenesCost && putGapInXCost < putGapInYCost) 
+			else if(putGapInXCost < alignGenesCost && putGapInXCost < putGapInYCost) // We go to the left
 				optimalCost = new Cost(putGapInXCost, new int[] {xIndex,yIndex+1});
 			
-			else 
+			else // We go up
 				optimalCost = new Cost(putGapInYCost, new int[] {xIndex+1,yIndex});
 		}
 		return optimalCost; 
 	}
 
-	
+	// Based on the pointers of the Costs in the cost matrix, build the strings for the genes.
 	private static String[] getOptimalAlignment(Cost[][] costMatrix, char[] geneX, char[] geneY) {
 		int x  = 0;
 		int y = 0;

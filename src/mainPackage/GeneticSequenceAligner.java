@@ -16,11 +16,26 @@ public class GeneticSequenceAligner {
 								'A', 'C', 'A', 'C', 'G', 'A', 'G', 'C', 'A', 'T', 'G', 'C', 'A', 'G', 'A', 'G', 'A', 'C' };
 		char[] testGene2Y = { 'A', 'A', 'T', 'T', 'G', 'C', 'C', 'G', 'C', 'C', 'G', 'T', 'C', 'G', 'T', 'T', 'T', 'T',
 								'C', 'A', 'G', 'C', 'A', 'G', 'T', 'T', 'A', 'T', 'G', 'T', 'C', 'A', 'G', 'A', 'T', 'C' };
-
+		
+		char[] myTestGeneX = {'A','A','C','A','G','T','T','A','C','C'};
+		char[] myTestGeneY = {'T','A','A','G','G','T','C','A'};
+		
+		Cost[][] testResult = generateCostMatrix(myTestGeneX,10,myTestGeneY,8);
+		
+		String[] optimalCosts = determineOptimalCosts(testResult,myTestGeneX,myTestGeneY);
+		
+		for (Cost[] is : testResult) {
+			for (Cost is2 : is) {
+				System.out.printf("%4d",is2.value);
+			}
+			System.out.println();
+		}
+		
 	}
 
-	private static char[][] getOptimalSequences(char[] geneX, int n, char[] geneY, int m) {
-		int[][] optimalMatrix = new int[n + 1][m + 1];
+	private static Cost[][] generateCostMatrix(char[] geneX, int n, char[] geneY, int m) {
+		
+		Cost[][] costMatrix = new Cost[n + 1][m + 1];
 
 		if (n > m) { // Matrix is fridge shaped (standing rectangle)
 			
@@ -31,7 +46,7 @@ public class GeneticSequenceAligner {
 			// Iterates through the bottom right corner of the fridge matrix
 			for (int i = 0; i < m; i++) {
 				for (int j = 0; j < diagonal; j++) {
-					optimalMatrix[n - vOffset + j][m - hOffset - j] = getOptimalAlignment(geneX,(n-vOffset+j),geneY,(m-hOffset-j),optimalMatrix);
+					costMatrix[n - vOffset + j][m - hOffset - j] = getOptimalCost((n-vOffset+j),geneX,(m-hOffset-j),geneY,costMatrix);
 				}
 				vOffset++;
 				diagonal++;
@@ -40,7 +55,7 @@ public class GeneticSequenceAligner {
 			// Iterates through the middle section of the fridge matrix
 			for (int i = 0; i < n + 1 - m; i++) {
 				for (int j = 0; j < diagonal; j++) {
-					optimalMatrix[n - vOffset + j][m - hOffset - j] = getOptimalAlignment(geneX,(n-vOffset+j),geneY,(m-hOffset-j),optimalMatrix);
+					costMatrix[n - vOffset + j][m - hOffset - j] = getOptimalCost((n-vOffset+j),geneX,(m-hOffset-j),geneY,costMatrix);
 				}
 				vOffset++;
 			}
@@ -50,7 +65,7 @@ public class GeneticSequenceAligner {
 				diagonal--;
 				hOffset++;
 				for (int j = 0; j < diagonal; j++) {
-					optimalMatrix[j][m - hOffset - j] = getOptimalAlignment((j),geneX,(m-hOffset-j),geneY,optimalMatrix);
+					costMatrix[j][m - hOffset - j] = getOptimalCost((j),geneX,(m-hOffset-j),geneY,costMatrix);
 				}
 				
 			}
@@ -64,7 +79,7 @@ public class GeneticSequenceAligner {
 			// Iterates through the bottom right corner of the rectangular matrix
 			for (int i = 0; i < n; i++) {
 				for (int j = 0; j < diagonal; j++) {
-					optimalMatrix[n - vOffset + j][m - hOffset - j] = getOptimalAlignment((n-vOffset+j),geneX,(m-hOffset-j),geneY,optimalMatrix);
+					costMatrix[n - vOffset + j][m - hOffset - j] = getOptimalCost((n-vOffset+j),geneX,(m-hOffset-j),geneY,costMatrix);
 				}
 				vOffset++;
 				diagonal++;
@@ -73,7 +88,7 @@ public class GeneticSequenceAligner {
 			// Iterates through the middle section of the rectangular matrix
 			for (int i = 0; i < m + 1 - n; i++) {
 				for (int j = 0; j < diagonal; j++) {
-					optimalMatrix[n - vOffset + j][m - hOffset - j] = getOptimalAlignment((n-vOffset+j),geneX,(m-hOffset-j),geneY,optimalMatrix);
+					costMatrix[n - vOffset + j][m - hOffset - j] = getOptimalCost((n-vOffset+j),geneX,(m-hOffset-j),geneY,costMatrix);
 				}
 				hOffset++;
 			}
@@ -82,7 +97,7 @@ public class GeneticSequenceAligner {
 			for (int i = 0; i < n; i++) {
 				diagonal--;
 				for (int j = 0; j < diagonal; j++) {
-					optimalMatrix[n - vOffset + j][m - hOffset - j] = getOptimalAlignment((n-vOffset+j),geneX,(m-hOffset-j),geneY,optimalMatrix);
+					costMatrix[n - vOffset + j][m - hOffset - j] = getOptimalCost((n-vOffset+j),geneX,(m-hOffset-j),geneY,costMatrix);
 				}
 				hOffset++;
 			}
@@ -95,7 +110,7 @@ public class GeneticSequenceAligner {
 			// Iterates through the bottom right corner of the square matrix
 			for (int i = 0; i < n; i++) {
 				for (int j = 0; j < diagonal; j++) {
-					optimalMatrix[n - vOffset + j][m - hOffset - j] = getOptimalAlignment((n-vOffset+j),geneX,(m-hOffset-j),geneY,optimalMatrix);
+					costMatrix[n - vOffset + j][m - hOffset - j] = getOptimalCost((n-vOffset+j),geneX,(m-hOffset-j),geneY,costMatrix);
 				}
 				vOffset++;
 				diagonal++;
@@ -103,7 +118,7 @@ public class GeneticSequenceAligner {
 
 			// Iterates through the middle diagonal of the square matrix
 			for (int j = 0; j < diagonal; j++) {
-				optimalMatrix[n - vOffset + j][m - hOffset - j] = getOptimalAlignment((n-vOffset+j),geneX,(m-hOffset-j),geneY,optimalMatrix);
+				costMatrix[n - vOffset + j][m - hOffset - j] = getOptimalCost((n-vOffset+j),geneX,(m-hOffset-j),geneY,costMatrix);
 			}
 			
 			// Iterates through the upper left corner of the square matrix
@@ -111,30 +126,41 @@ public class GeneticSequenceAligner {
 				diagonal--;
 				hOffset++;
 				for (int j = 0; j < diagonal; j++) {
-					optimalMatrix[n - vOffset + j][m - hOffset - j] = getOptimalAlignment((n-vOffset+j),geneX,(m-hOffset-j),geneY,optimalMatrix);
+					costMatrix[n - vOffset + j][m - hOffset - j] = getOptimalCost((n-vOffset+j),geneX,(m-hOffset-j),geneY,costMatrix);
 				}
 
 			}
 			
 		}
+		
+		return costMatrix;
 
 	}
 	
-	private static int getOptimalAlignment(int xIndex,char[] geneX, int yIndex,char[] geneY, int[][] matrix) {
-		int optimalCost = 0;
+	private static Cost getOptimalCost(int xIndex,char[] geneX, int yIndex,char[] geneY, Cost[][] matrix) {
+		Cost optimalCost = new Cost();
 		
-		if(xIndex == matrix.length) {
-			optimalCost = 2*(matrix.length-xIndex);
-		}else if (yIndex == matrix[0].length) {
-			optimalCost = 2*(matrix.length-xIndex);
+		if(xIndex == geneX.length) { // If we are on the bottom row
+			optimalCost.value = 2*(geneY.length-yIndex);
+		}else if (yIndex == geneY.length) { // If we are on the right column
+			optimalCost.value = 2*(geneX.length-xIndex);
 		}else {
-			int putGapInXCost = matrix[xIndex][yIndex+1] + GAP_PENALTY;
-			int putGapInYCost = matrix[xIndex+1][yIndex] + GAP_PENALTY;
-			int alignGenesCost = 0;
+			int putGapInXCost = matrix[xIndex][yIndex+1].value + GAP_PENALTY;
+			int putGapInYCost = matrix[xIndex+1][yIndex].value + GAP_PENALTY;
+			int alignGenesCost = matrix[xIndex+1][yIndex+1].value;
 			if(geneX[xIndex] != geneY[yIndex])
-				alignGenesCost = MISMATCH_PENALTY;
+				alignGenesCost += MISMATCH_PENALTY;
 			
-			optimalCost = Math.min(Math.min(putGapInXCost, putGapInYCost), alignGenesCost);
+			if(alignGenesCost < putGapInXCost && alignGenesCost < putGapInYCost) 
+				optimalCost = new Cost(alignGenesCost, new int[] {xIndex+1,yIndex+1});
+			
+			else if(putGapInXCost < alignGenesCost && putGapInXCost < putGapInYCost) 
+				optimalCost = new Cost(putGapInXCost, new int[] {xIndex,yIndex+1});
+			
+			else 
+				optimalCost = new Cost(putGapInYCost, new int[] {xIndex+1,yIndex});
+			
+			
 		}
 		
 		return optimalCost; 

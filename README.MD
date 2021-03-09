@@ -7,7 +7,7 @@ Next, using the opt table containing Cost variables, determine the path and buil
 
 ## Test 1
 
-Gene1 = {'C', 'A', 'G', 'C', 'A', 'C', 'T', 'T', 'G', 'G', 'A', 'T', 'T', 'C', 'T', 'C', 'G','G'}
+Gene1 = {'C', 'A', 'G', 'C', 'A', 'C', 'T', 'T', 'G', 'G', 'A', 'T', 'T', 'C', 'T', 'C', 'G','G'}  
 Gene2 = {'C', 'A', 'G', 'C', 'G', 'T', 'G', 'G'}
 
 ### Opt table (cost matrix) generated
@@ -39,13 +39,13 @@ Gene2 = {'C', 'A', 'G', 'C', 'G', 'T', 'G', 'G'}
 
 ### Gene sequences generated
 
-CAGCACTTGGATTCTCGG
+CAGCACTTGGATTCTCGG  
 CAG--C---G----T-GG
 
 ## Test 2
 
 Gene1 = {'T', 'C', 'C', 'C', 'A', 'G', 'T', 'T', 'A', 'T', 'G', 'T', 'C', 'A', 'G', 'G', 'G', 'G',
-		'A', 'C', 'A', 'C', 'G', 'A', 'G', 'C', 'A', 'T', 'G', 'C', 'A', 'G', 'A', 'G', 'A', 'C'}
+		'A', 'C', 'A', 'C', 'G', 'A', 'G', 'C', 'A', 'T', 'G', 'C', 'A', 'G', 'A', 'G', 'A', 'C'}  
 Gene2 = {'A', 'A', 'T', 'T', 'G', 'C', 'C', 'G', 'C', 'C', 'G', 'T', 'C', 'G', 'T', 'T', 'T', 'T',
 		'C', 'A', 'G', 'C', 'A', 'G', 'T', 'T', 'A', 'T', 'G', 'T', 'C', 'A', 'G', 'A', 'T', 'C'}
 
@@ -96,12 +96,12 @@ Gene2 = {'A', 'A', 'T', 'T', 'G', 'C', 'C', 'G', 'C', 'C', 'G', 'T', 'C', 'G', '
 
 ### Gene sequences generated
 
-TCCCAGTTATGTCAGGGGACACGAGCATG-CAGAGAC
+TCCCAGTTATGTCAGGGGACACGAGCATG-CAGAGAC  
 AATTGCCGCCGTCGTTTTCAGCAGTTATGTCAGA-TC
 
 ## Test 3
 
-Gene1 = {'A','A','C','A','G','T','T','A','C','C'}
+Gene1 = {'A','A','C','A','G','T','T','A','C','C'}  
 Gene2 = {'T','A','A','G','G','T','C','A'}
 
 ### Opt table (cost matrix) generated
@@ -125,7 +125,7 @@ Gene2 = {'T','A','A','G','G','T','C','A'}
 
 ### Gene sequences generated
 
-AACAGTTACC
+AACAGTTACC  
 TA-AGGT-CA
 
 # Using the Code
